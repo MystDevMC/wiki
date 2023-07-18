@@ -179,10 +179,10 @@ export const mdxComponents: MDXComponents = {
     <Configurable content={children} isClient={isClient} />
   ),
   JsonStructure: ({ title, children }) => (
-    <JsonStructure title={title} children={children} />
+    <JsonStructure title={title}>{children}</JsonStructure>
   ),
   JsonNode: ({ content, children }) => (
-    <JsonNode content={content} children={children} />
+    <JsonNode content={content}>{children}</JsonNode>
   ),
   JsonDataType: ({ type }) => <JsonDataType type={type} />,
 };
