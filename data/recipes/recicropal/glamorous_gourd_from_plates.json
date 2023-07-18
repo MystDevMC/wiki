@@ -1,0 +1,9 @@
+{
+    "type": "shaped",
+    "pattern": [" I ","IGI"," I "],
+    "result": "recicropal:glamorous_gourd",
+    "keys": {
+        "I" : "#forge:plates/gold",
+        "G" : "recicropal:bottle_gourd_fruit"
+    }
+}

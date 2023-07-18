@@ -1,0 +1,9 @@
+{
+    "type": "shapeless",
+    "pattern": ["G  ","   ","   "],
+    "result": "recicropal:bottle_gourd_seeds",
+    "count": 2,
+    "keys": {
+        "G" : "recicropal:bottle_gourd_fruit"
+    }
+}

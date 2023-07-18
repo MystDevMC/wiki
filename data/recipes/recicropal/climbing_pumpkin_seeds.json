@@ -1,0 +1,11 @@
+{
+    "type": "shapeless",
+    "pattern": ["BSV","   ","   "],
+    "result": "recicropal:climbing_pumpkin_seeds",
+    "count": 2,
+    "keys": {
+        "B" : "minecraft:bone_meal",
+        "S" : "minecraft:pumpkin_seeds",
+        "V" : "minecraft:vine"
+    }
+}

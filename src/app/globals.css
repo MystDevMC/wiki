@@ -25,3 +25,11 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.pixelate {
+  image-rendering: pixelated;
+}
+
+.img-cap {
+  @apply text-center text-gray-400 text-sm mt-2 italic
+}

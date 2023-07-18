@@ -1,0 +1,13 @@
+{
+  "type": "shaped",
+  "pattern": [
+    "   ",
+    "###",
+    "   "
+  ],
+  "keys": {
+    "#": "#forge:wires/iron"
+  },
+  "result": "recicropal:trellis",
+  "count": 5
+}

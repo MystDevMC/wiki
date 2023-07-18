@@ -1,0 +1,9 @@
+{
+    "type": "shaped",
+    "pattern": ["III","IGI","III"],
+    "result": "recicropal:glamorous_gourd",
+    "keys": {
+        "I" : "minecraft:gold_ingot",
+        "G" : "recicropal:bottle_gourd_fruit"
+    }
+}

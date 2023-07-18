@@ -1,0 +1,13 @@
+{
+  "type": "shaped",
+  "pattern": [
+    " # ",
+    "# #",
+    " # "
+  ],
+  "keys": {
+    "#": "minecraft:iron_bars"
+  },
+  "result": "recicropal:trellis",
+  "count": 5
+}

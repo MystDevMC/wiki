@@ -1,0 +1,272 @@
+---
+title: Bottle Gourd
+version: 1.0.0.a
+---
+
+# _<Icon img="/recicropal/icons/bottle_gourd_fruit.png"/>_ Bottle Gourds
+
+Bottle gourds are climbing plants that can be found in small patches in savanna biomes.
+They grow and spread much like vines and each blocks can bear their own fruits.
+_<DataDriven>
+This can be configured in `forge/biome_modifier/vine_patch` inside `recicropal`'s namespace
+</DataDriven>_
+
+<div>
+  <div className="grid grid-cols-2 gap-4">
+    <div>![Savanna Gourd Patches](/recicropal/gourd_patch.png)</div>
+    <div>![Savanna Gourd Patches](/recicropal/gourd_patch_2.png)</div>
+  </div>
+  <div className="img-cap">
+    Savanna gourd patches
+  </div>
+</div>
+
+
+Bottle gourds and [gourd bottles](#gourd-bottles) can sometimes be traded for emeralds with savanna or desert villagers.
+_<Configurable>
+Bottle gourd trades can be toggled via the `addTrades` field inside the `bottle_gourd` category.
+</Configurable>_
+
+<div>
+![Bottle Trades](/recicropal/bottle_trading.png)
+<div className="img-cap">
+  A desert farmer villager with a listing for water-filled bottles.
+</div>
+</div>
+
+## _<Icon img="/recicropal/icons/bottle_gourd_seeds.png"/>_ Bottle Gourd Seeds and Crop
+
+Bottle gourd seeds can be obtained via crafting recipe below.
+
+<CraftingRecipe recipe="/recicropal/bottle_gourd_seeds.json" />
+
+They can be planted on any dirt. They don't drop their seeds when the plant block is broken.
+
+Bottle gourd seeds can also be collected from [rotten bottle gourds](#rotting).
+
+From time to time, the main plant will try to attach vines to its surrounding available blocks.
+These vines would also try to spread copy of themselves vertically and horizontally.
+The vines cannot stray too far from the main plant and they'll die out if they do.
+
+The vines and main plant have 4 stages of growth.
+The final stage is indicated by the prescence of a white flower.
+After some time in bloom, they'll try to place their fruit in place.
+Destroying the vine itself in the process.
+
+The vines has 6 sides to fill inside a block's space.
+If it has the bottom side and is supported by a non-full block, like [trellises](/recicropal/content/decorations#trellis), and the block below the supporting block is empty,
+it will try to bear a hanging fruit instead.
+Replacing the empty space with the fruit.
+
+## _<Icon img="/recicropal/icons/bottle_gourd.png"/>_ Gourd Bottles
+
+Gourd bottles can stack up to 16 and can be used to hold a configurable amount of fluid.
+By default, the amount of fluid each bottle can hold is 2000 mB or 2 standard vanilla buckets.
+_<Configurable>
+The capacity of gourd bottles can be configured
+under the `bottle_gourd` category via the field `bottleCapacity`.
+</Configurable>_
+
+Gourd bottles are placeable. Retaining their fluid contents when placed.
+They can also be emptied via crafting.
+
+<div>
+  Gourd bottles can be used like so.
+  <ul>
+    - When used on a fluid source, it will attempt to take the fluid and fill the bottle with it.
+      <ul>  
+      - If it fails to fill the bottle, The player would attempt to drink the fluid inside the bottle.
+      </ul>
+    - When used on an empty space, it will attempt to place the fluid inside it.
+       <ul>  
+      - Again. If it fails to place the fluid, The player would attempt to drink the fluid inside the bottle.
+      </ul>
+    - When used on a valid surface while sneaking, it will attempt to place the bottle itself.
+  </ul>
+</div>
+
+The contents of gourd bottles are shown by their item tooltips and a graphical tooltip visible when
+the player is sneaking while looking at their placed blocks.
+_<Configurable isClient={true}>
+This graphical tooltip can be toggled using the field `renderBottleTooltip`.
+</Configurable>_
+
+Gourd bottle blocks outputs **comparator signal**. Emitting the full range of redstone signal from 0 to 15.
+
+### Obtaining
+
+Gourd bottles are mainly obtained from smoking bottle gourds as shown below.
+
+<OneToOneRecipe recipe="/recicropal/bottle_gourd.json"/>
+
+Desert villages would sometimes have drinking wells inside them, featuring the bottles.
+_<Configurable>
+`recicropal`'s village structures can be (en/dis)abled in the
+config field `spawnVillagerStructures` inside the `miscellaneous` category.
+</Configurable>_
+
+<div>
+  ![Drinking Well](/recicropal/drinking_well.png)
+  <div className="img-cap">
+    A drinking well found in a desert village
+  </div>
+</div>
+
+Savanna and desert village house chests sometimes contain some number of bottles with a random amount of
+water inside.
+_<DataDriven >
+Village chest loots can be configured via `loot_tables/chests` under
+`recicropal`'s namespace.
+</DataDriven>_
+
+By default, naturally-grown bottle gourd fruits may sometimes [rot](#rotting) and leave behind a gourd bottle
+filled with a random mixture.
+
+### Filling <DataDriven >Check out `recicropal/filling` to configure this behavior</DataDriven>
+
+Gourd bottles can be filled in various ways.
+Fluid-containing items could be used on the bottle without sneaking to attempt transfer from them into the bottle.
+By default, the amount of transfer is set to one bucket or 1000 mB.
+_<Configurable>
+The transfer amount of gourd bottles can be configured under the `bottle_gourd` category
+using the field `bottleTransferAmount`.
+</Configurable>_
+
+Common ways to fill fluid containers from other mods can also be used to fill gourd bottles.
+
+<Technical title="Gourd bottle capabilities">
+As an item, gourd bottles have the `IFluidHandlerItem` capability.
+
+Gourd bottle blocks also exposes the `IFluidHandler` capability but only from their top and bottom sides.
+
+</Technical>
+
+Vanilla milk buckets, honey bottles, and potions can also be used to fill gourd bottle blocks.
+Using them on a gourd bottle would empty their respective contents into the bottles.
+
+<Technical title="'Fluid-handling' items">
+  Some items may need further configuration via recipes to work as they may not
+  be 'coded' in the common way of fluid-handling items. Some of these examples
+  are vanilla milk buckets, honey bottles, and potions.
+
+  If an `IFluidHandlerItem` item is configured to have a `recicropal:filling` recipe,
+  it will prioritize the recipe first.
+</Technical>
+
+To allow other items to be used to fill the bottle, filling recipes could be configured.
+The structure of a `recicropal:filling` recipe can be described as below.
+
+<JsonStructure title="Filling Recipe">
+  <JsonNode content={<><JsonDataType type="string"/> <code>type</code> : <code>recicropal:filling</code></>}/>
+  <JsonNode content={<><JsonDataType type="array"/> <code>conditions</code> Predicates to achieve conditionally-loaded data.</>}/>
+  <JsonNode content={<><JsonDataType type="obj"/> <code>ingredient</code> A vanilla-esque item ingredient to be emptied.</>}/>
+  <JsonNode content={<><JsonDataType type="obj"/> <code>fluid</code> A fluid definition to fill the bottle with.</>}>
+    <JsonNode content={<>Either a <code>tag</code> or <code>fluid</code> but not both.</>}>
+      <JsonNode content={<><JsonDataType type="string"/> <code>tag</code> If this is set, it will find the first fluid registered that has the tag specified.</>}/>
+      <JsonNode content={<><JsonDataType type="string"/> <code>fluid</code> A fluid ID.</>}/>
+    </JsonNode>
+    <JsonNode content={<><JsonDataType type="int"/> <code>amount</code> The amount of fluid to be filled. Defaults to zero if not specified.</>}/>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> The NBT to attach to the fluid filled structured as-is and not as a string.</>}/>
+  </JsonNode>
+  <JsonNode content={<><JsonDataType type="obj"/> <code>result</code> A serialized <code>ItemStack</code> representing the item returned after its contents are emptied e.g. glass bottles.</>}>
+    <JsonNode content={<><JsonDataType type="string"/> <code>id</code> The item's ID. Must be specified in order to work.</>}/>
+    <JsonNode content={<><JsonDataType type="int"/> <code>Count</code> The number of items. Must be specified in order to work.</>}/>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> The item's NBT. Optional.</>}/>
+  </JsonNode>
+  <JsonNode content={<div className="flex flex-col gap-2"><div><JsonDataType type="string"/> <code>process</code> A string value for a special process's ID. Currently, only <code>recicropal:potion</code> exists and should only be used for potion items.</div>
+    <div>If this property exists, the recipe will ignore all other properties.</div>
+  </div>}/>
+</JsonStructure>
+
+### Milk, Honey, and Potion Fluid
+
+They are what milk buckets, honey bottles, and potions contain respectively.
+They **cannot** be placed in the world.
+
+<Technical title="Potion fluids">
+Potion fluids contains all of the potion item's NBT that is considered necessary, including potion ID,
+effects, and color.
+
+To appropriately handle other mod's potion fluids, [fluid conversion](#fluid-conversion) might be needed.
+Check out current [integrations](/recicropal/integrations) to see the mods that have built-in support.
+</Technical>
+
+### Fluid Conversion <DataDriven >Check out `recicropal/fluid_conversion` to configure this behavior</DataDriven>
+
+For integration purposes, fluids inserted into the bottle can be converted into other fluids.
+This allows certain fluids to be handled properly when interacted with the bottle.
+
+By default, every milk under the tag `#forge:milk` would be converted into default milk.
+Note that this may cause complications when there are other kinds of milk that the packdev
+may want to preserve.
+
+When there's already any fluid inside the bottle and filling is attempted, [fluid mixing](/recicropal/content/mixing)
+would be attempted.
+
+Fluid conversion recipes' structure can be described as following.
+<JsonStructure title="Fluid Conversion Recipe">
+  <JsonNode content={<><JsonDataType type="string"/> <code>type</code> : <code>recicropal:fluid_conversion</code></>}/>
+  <JsonNode content={<><JsonDataType type="array"/> <code>conditions</code> Predicates to achieve conditionally-loaded data.</>}/>
+  <JsonNode content={<><JsonDataType type="obj"/> <code>from</code> A fluid ingredient to convert.</>}>
+    <JsonNode content={<>Either a <code>tag</code> or <code>fluid</code> but not both.</>}>
+      <JsonNode content={<><JsonDataType type="string"/> <code>tag</code> A fluid tag to match.</>}/>
+      <JsonNode content={<><JsonDataType type="string"/> <code>fluid</code> A fluid ID.</>}/>
+    </JsonNode>
+  </JsonNode>
+  <JsonNode content={<><JsonDataType type="string"/> <code>to</code> An ID specifying the fluid to convert the input fluid into.</>}/>
+  <JsonNode content={<><JsonDataType type="string"/> <code>function</code> A function ID to use. If not specified, it would only swap the fluid types. Currently hardcoded and only available for certain mods for built-in integration. Read more <a href="/recicropal/integrations">here</a>.</>}/>
+  <JsonNode content={<><JsonDataType type="boolean"/> <code>ingress</code> A flag that specifies the direction of flow. Currently does nothing.</>}/>
+</JsonStructure>
+
+
+### Pouring out Fluids <DataDriven >Check out `recicropal/pouring` to configure this behavior</DataDriven>
+
+Similarly, there are various mechanisms that allow the fluid inside the bottle to be extracted.
+Common ways to empty fluid containers from other mods can be used to extract fluid from gourd bottles.
+Fluid container items can also take out the stored fluid when used on the bottle while sneaking.
+
+By default, glass bottles can be used to extract water, potion, and honey from gourd bottle blocks.
+Vanilla buckets can also be used to extract milk from a gourd bottle.
+
+To allow other items to be used to extract fluid from the bottle, pouring recipes could be configured.
+The structure of a `recicropal:pouring` recipe can be described as below.
+
+<JsonStructure title="Pouring Recipe">
+  <JsonNode content={<><JsonDataType type="string"/> <code>type</code> : <code>recicropal:pouring</code></>}/>
+  <JsonNode content={<><JsonDataType type="array"/> <code>conditions</code> Predicates to achieve conditionally-loaded data.</>}/>
+  <JsonNode content={<><JsonDataType type="obj"/> <code>ingredient</code> A vanilla-esque item ingredient to be filled.</>}/>
+  <JsonNode content={<><JsonDataType type="obj"/> <code>fluid</code> A fluid definition to fill the item with.</>}>
+    <JsonNode content={<>Either a <code>tag</code> or <code>fluid</code> but not both.</>}>
+      <JsonNode content={<><JsonDataType type="string"/> <code>tag</code> If this is set, it will match for fluids with the tag specified.</>}/>
+      <JsonNode content={<><JsonDataType type="string"/> <code>fluid</code> A specific fluid ID to match.</>}/>
+    </JsonNode>
+    <JsonNode content={<><JsonDataType type="int"/> <code>amount</code> The amount of fluid to be poured out. Defaults to the <code>drinkingMaxAmount</code> config if not specified.</>}/>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> The NBT to match structured as-is and not as a string.</>}/>
+  </JsonNode>
+  <JsonNode content={<><JsonDataType type="obj"/> <code>result</code> A serialized <code>ItemStack</code> representing the item returned after it has been filled with the fluid e.g. honey bottles.</>}>
+    <JsonNode content={<><JsonDataType type="string"/> <code>id</code> The item's ID. Must be specified in order to work.</>}/>
+    <JsonNode content={<><JsonDataType type="int"/> <code>Count</code> The number of items. Must be specified in order to work.</>}/>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> The item's NBT. Optional.</>}/>
+  </JsonNode>
+  <JsonNode content={<div className="flex flex-col gap-2"><div><JsonDataType type="string"/> <code>process</code> A string value for a special process's ID. Currently, only <code>recicropal:potion</code> exists and should only be used for potion items.</div>
+    <div>If this property exists, the recipe will ignore all other properties.</div>
+  </div>}/>
+</JsonStructure>
+
+## _<Icon img="/recicropal/icons/bottle_gourd_seeds.png"/>_ Rotting
+
+Naturally-grown bottle gourd fruits may rot from time to time.
+_<Configurable>
+This behavior can be toggled by using the field
+`bottleGourdsRot` under the `bottle_gourd` category. 
+</Configurable>_
+Turning into gourd bottles that drop seeds when broken.
+These bottles may contain mixtures with interesting compositions of potion effects.
+## _<Icon img="/recicropal/icons/glamorous_gourd.png"/>_ Glamorous Gourd
+
+Bottle gourd fruits can be crafted into glamorous gourds as shown below.
+_<DataDriven title="Glamorous gourd recipes"> If the tag `#forge:plates/gold` has any member, the following recipe is used instead. <CraftingRecipe recipe="/recicropal/glamorous_gourd_from_plates.json" small/></DataDriven>_
+
+<CraftingRecipe recipe="/recicropal/glamorous_gourd.json" />
+
+Glamorous gourds are currently used only for brewing **Potion of Revitalization** which gives health boost, regeneration, and instant healing.

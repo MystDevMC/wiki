@@ -1,0 +1,33 @@
+{
+    "Overview": "index",
+    "Changelog": "https://raw.githubusercontent.com/MystDevMC/recicropal/1.19.2/CHANGELOG.md",
+    "Crops": [
+        {
+            "title": "Bottle Gourd",
+            "icon": "bottle_gourd",
+            "docs": "crops/bottle_gourd"
+        },
+        {
+            "title": "Climbing Melon & Pumpkin",
+            "icon": "vines",
+            "docs": "crops/climbing_crops"
+        }
+    ],
+    "Contents": [
+        {
+            "title": "Decorations",
+            "docs": "content/decorations"
+        },
+        {
+            "title": "Drinking",
+            "docs": "content/drinking"
+        },
+        {
+            "title": "Mixing",
+            "docs": "content/mixing"
+        }
+    ],
+    "Integrations": {
+        "docs": "integrations"
+    }
+}
