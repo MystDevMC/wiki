@@ -2,11 +2,10 @@ import { promises as fs } from "fs";
 import MDX from "@/components/docs/mdx-wrapper";
 import { cx } from "@/lib/common-utils";
 import MD from "@/components/docs/md-wrapper";
-import { envSensitivePath } from "@/lib/server-utils";
 
 // TODO Refactor this
 async function parseListJson(name: string) {
-  const data = await fs.readFile(envSensitivePath(name + "/list.json"), "utf8");
+  const data = await fs.readFile(`${process.cwd()}/data/lists/${name}.json` , "utf8");
   const elements: JSX.Element[] = [];
   const addtional = {
     changelogLink: "",
