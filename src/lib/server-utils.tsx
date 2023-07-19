@@ -14,7 +14,7 @@ export function envSensitivePath(relativePath: string) {
       absolutePath = path.join(process.cwd(), 'public', relativePath);
     } else {
       // If in production, directly access the file at the root
-      absolutePath = path.join(process.cwd(), relativePath);
+      absolutePath = './'+ relativePath;
     }
 
     return absolutePath;
