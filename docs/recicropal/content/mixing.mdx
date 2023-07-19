@@ -5,13 +5,121 @@ version: 1.0.0.a
 
 # Fluid Mixing <DataDriven >Check out `recicropal/mixing` to configure this behavior.</DataDriven>
 
-Gourd bottle blocks allow different fluids to be mixed when inserted.
+[Gourd bottle](/recicropal/crops/bottle_gourd#gourd-bottles) blocks allow different fluids to be mixed when inserted.
 How gourd bottles process fluid inserted to them can be described as follows.
 
+<div className="flex justify-center">
 ```
-Filling > Fluid Conversion > Mixing
+Filling -> Fluid Conversion -> Mixing
 ```
+</div>
+
+Currently, only gourd bottle blocks support fluid mixing.
+
+By default, potion fluids and [potion mixtures](#potion-mixing) can be mixed with one another.
+Additionally, when mixed with milk, the milk will neutralize these fluids and turning them into plain old water.
+
+## Potion Mixing <Configurable >Enable this via the `potionMixing` field config under the `bottle_gourd` category.</Configurable>
+
+**Potions** can be mixed together inside a gourd bottle block, resulting in a potion mixture.
+A bottle of potion in vanilla contains an amount of **potion** fluid with one or many potion **effects**.
+
+### Mixture Fluids
+Potion mixtures allow different **potions** to be drunk at the same time.
+A mixture could be a **Potent Mix**, a **Sus Juice**, or an **Icky Sludge** depending on the potion effect types they contain.
+Their color also changes based on the composition of potions inside them.
+
+### Molarity
+The proportions of **potions** inside a mixture are based on real-world concept of molarity.
+A full `1` Molar potion in a `1` bucket mixture means that **the whole** mixture consists of that particular potion.
+As another example, a `0.25 Molar` potion in a `1` bucket mixture means that **only 25%** of the whole mixture is that potion.
+
+The **effects** inside a **potion** inside a mixture shares the same molarity.
+The molarities of similar **effects** with the same amplifier from different **potions** will be combined when they are going to be applied to the player.
+
+### Dosage
+The lengths of potion effects applied are scaled based on the potion's molarity.
+To apply the same effects and durations of a regular potion, the player needs to drink `250 moles`
+_<Configurable >
+Configure this via the `drinkingMaxAmount` field config under the `bottle_gourd` category.
+</Configurable>_
+`(250 mB * 1 Molar)` worth of that potion.
+
+For example, mixing a 3-minute strength and 3-minute invisibility potions would result in each of them having 0.5 molarity in the mixture.
+Drinking 250 mB from the mixture would apply 1.5-minute worth of both potions.
+
+Potion fluids are considered to have a 1 Molar of their respective **potions**.
+
+Different types of potions also modify the resulting length of each drink. This includes splash and lingering potions.
+They only apply the bonus durations when mixed. Drinking splash and lingering potions on their own from the bottle
+would be the same as drinking their regular counterparts.
+
+### Splash Potions
+Splash **potions** averages the durations of all **effects** added to the mix. This averaging effect is controlled by the molarity too.
+The more splash **potions** are inside the mixture, the more well-distributed the durations of **effects** become.
+
+The formula used to calculate the resulting length of an **effect** after considering splash potions can be described as following.
+
+<div className="flex justify-center">
+```
+len = (avgLen * splashM + oldLen * nonSplashM) * effectM
+```
+</div>
+
+As an example, a `3`-minute **splash** fire resistance (250 mB) mixed with a **normal** `8`-minute water breathing (250 mB) will result in 
+a 500 mB mixture that applies...
+- A `(3+8)/(2) * 0.5 + 3 * 0.5 = 4.25 * 250/500 = 2.125`-minute fire resistance, and...
+- A `(3+8)/(2) * 0.5 + 8 * 0.5 = 6.75 * 250/500 = 3.375`-minute water breathing
+per 250 mB drunk.
+
+In contrast, a `3`-minute **splash** fire resistance (250 mB) mixed with an `8`-minute **splash** water breathing (250 mB) will result in
+a 500 mB mixture that applies `(3+8)/(2) * 1 + 0 = 5.5 * 0.5 = 2.25`-minute of each potion effects per 250 mB drunk.
+
+### Lingering Potions
+Lingering potions extends the duration of applied effects per drinking depending on their proportions in the mix.
+The more lingering potion is in the mix, the longer the duration of each effects per drink become.
+The maximum length can be achieved here is twice the effect's length. This happens when 100% of the potions in the mix were all lingering.
+
+<div className="flex justify-center">
+```
+finalLen = lenAfterSplash * (1 + lingeringM)
+```
+</div>
+
+### Instantaneous Effects
+Some effects are Instantaneous, meaning their duration are meaningless since they are applied instantly.
+When drinking a mixture that has Instantaneous effects, the moles drunk would be tallied until it reaches the proper [dosage](#dosage) inside the player's body.
+
+For instance, the player needs to drink 1000 mBs worth of mixture that has 25% instant healing in order to receive the healing.
+
+The effects with the same type and amplifier from different drinks would be tallied together.
+
+The player would lose previously accumulated moles when they die.
 
 ## Recipes
 
-## Potion Mixing <Configurable >Enable this via the `potinoMixing` field config under the `bottle_gourd` category.</Configurable>
+To allow other fluids to be mixed, `recicropal:mixing` recipes could be configured.
+Their structure can be described as following.
+
+<JsonStructure title="Mixing Recipe">
+  <JsonNode content={<><JsonDataType type="string"/> <code>type</code> : <code>recicropal:mixing</code></>}/>
+  <JsonNode content={<><JsonDataType type="array"/> <code>conditions</code> Predicates to achieve conditionally-loaded data.</>}/>
+  <JsonNode content={<div className="flex flex-col gap-2"><div><JsonDataType type="obj"/> Both <code>fluidIn</code> and <code>fluidInside</code> representing the fluids to be mixed. Be aware that no <code>amount</code> property is needed here.</div><div>The recipe would match for both of these properties combinations reciprocally, meaning specifying <code>A</code> in <code>fluidIn</code> and <code>B</code> in <code>fluidInside</code> would be the same as specifying <code>A</code> in <code>fluidInside</code> and <code>B</code> in <code>fluidIn</code></div></div>}>
+    <JsonNode content={<>Either a <code>tag</code> or <code>fluid</code> but not both.</>}>
+      <JsonNode content={<><JsonDataType type="string"/> <code>tag</code> A fluid tag to match.</>}/>
+      <JsonNode content={<><JsonDataType type="string"/> <code>fluid</code> A fluid ID.</>}/>
+    </JsonNode>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> An optional NBT structured as-is. If this is specified, the recipe would sensitively match for the NBT. If not, the recipe woould ignore the fluid's NBTs.</>}/>
+  </JsonNode>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>result</code> The resultant fluid definition.</>}>
+    <JsonNode content={<>Either a <code>tag</code> or <code>fluid</code> but not both.</>}>
+      <JsonNode content={<><JsonDataType type="string"/> <code>tag</code> If this is set, it will find the first fluid registered that has the tag specified.</>}/>
+      <JsonNode content={<><JsonDataType type="string"/> <code>fluid</code> A fluid ID.</>}/>
+    </JsonNode>
+    <JsonNode content={<><JsonDataType type="int"/> <code>amount</code> The amount of fluid to be filled. Defaults to summing up the two input's amounts if not specified.</>}/>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> The NBT to attach to the fluid filled structured as-is. Optional.</>}/>
+    </JsonNode>
+  <JsonNode content={<div className="flex flex-col gap-2"><div><JsonDataType type="string"/> <code>process</code> A string value for a special process's ID. Currently, only <code>recicropal:potion</code> exists and should only be used for potion mixing.</div>
+    <div>If this property exists, the recipe will ignore all other properties.</div>
+  </div>}/>
+</JsonStructure>

@@ -166,7 +166,7 @@ The structure of a `recicropal:filling` recipe can be described as below.
       <JsonNode content={<><JsonDataType type="string"/> <code>fluid</code> A fluid ID.</>}/>
     </JsonNode>
     <JsonNode content={<><JsonDataType type="int"/> <code>amount</code> The amount of fluid to be filled. Defaults to zero if not specified.</>}/>
-    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> The NBT to attach to the fluid filled structured as-is and not as a string.</>}/>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> The NBT to attach to the fluid filled structured as-is. Optional.</>}/>
   </JsonNode>
   <JsonNode content={<><JsonDataType type="obj"/> <code>result</code> A serialized <code>ItemStack</code> representing the item returned after its contents are emptied e.g. glass bottles.</>}>
     <JsonNode content={<><JsonDataType type="string"/> <code>id</code> The item's ID. Must be specified in order to work.</>}/>
@@ -241,7 +241,7 @@ The structure of a `recicropal:pouring` recipe can be described as below.
       <JsonNode content={<><JsonDataType type="string"/> <code>fluid</code> A specific fluid ID to match.</>}/>
     </JsonNode>
     <JsonNode content={<><JsonDataType type="int"/> <code>amount</code> The amount of fluid to be poured out. Defaults to the <code>drinkingMaxAmount</code> config if not specified.</>}/>
-    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> The NBT to match structured as-is and not as a string.</>}/>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> An optional NBT structured as-is. If this is specified, the recipe would sensitively match for the NBT. If not, the recipe woould ignore the fluid's NBTs.</>}/>
   </JsonNode>
   <JsonNode content={<><JsonDataType type="obj"/> <code>result</code> A serialized <code>ItemStack</code> representing the item returned after it has been filled with the fluid e.g. honey bottles.</>}>
     <JsonNode content={<><JsonDataType type="string"/> <code>id</code> The item's ID. Must be specified in order to work.</>}/>
@@ -261,7 +261,7 @@ This behavior can be toggled by using the field
 `bottleGourdsRot` under the `bottle_gourd` category. 
 </Configurable>_
 Turning into gourd bottles that drop seeds when broken.
-These bottles may contain mixtures with interesting compositions of potion effects.
+These bottles may contain [mixtures](/recicropal/content/mixing#potion-mixing) with interesting compositions of potion effects.
 ## _<Icon img="/recicropal/icons/glamorous_gourd.png"/>_ Glamorous Gourd
 
 Bottle gourd fruits can be crafted into glamorous gourds as shown below.

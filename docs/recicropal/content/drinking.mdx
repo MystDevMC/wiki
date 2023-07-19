@@ -5,9 +5,52 @@ version: 1.0.0.a
 
 # Drinking <Configurable >Enable this via the `drinking` field config under the `bottle_gourd` category.</Configurable> <DataDriven >Check out `recicropal/drinking` to configure this behavior.</DataDriven>
 
-Gourd bottles allow the player to drink the fluids they contain.
+[Gourd bottles](/recicropal/crops/bottle_gourd#gourd-bottles) allow the player to drink the fluids they contain.
 
-By default, the amount of fluid consumed per drinking is 250 mB which is generally one serving of a bottle.
+By default, the maximum amount of fluid consumed per drinking is 250 mB which is generally one serving of a bottle.
 _<Configurable >
 Configure this via the `drinkingMaxAmount` field config under the `bottle_gourd` category.
 </Configurable>_
+
+[Milk, honey, and potion fluids](/recicropal/crops/bottle_gourd#milk-honey-and-potion-fluid) are by default
+configured to be drinkable from gourd bottles.
+Drinking milk would clear the status effects applied to the player.
+Drinking honey would restore the same amount of hunger like honey bottles and also clears the poison status effect.
+Drinking potion fluids would apply the aforementioned potion's effects to the player.
+
+Water can also be drunk from gourd bottles. Drinking water from gourd bottles is equal to drinking vanilla water bottles.
+
+[Potion mixtures](/recicropal/content/mixing#potion-mixing) would apply it's potion effects to the player when drunk.
+The durations of the potion effects applied are proportional to their *molarity* inside the mixture.
+Read the linked article for more info on potion mixing.
+
+## Recipes
+
+To make other fluids drinkable, `recicropal:drinking` recipes could be configured.
+Their structure can be described as following.
+
+<JsonStructure title="Drinking Recipe">
+  <JsonNode content={<><JsonDataType type="string"/> <code>type</code> : <code>recicropal:drinking</code></>}/>
+  <JsonNode content={<><JsonDataType type="array"/> <code>conditions</code> Predicates to achieve conditionally-loaded data.</>}/>
+  <JsonNode content={<><JsonDataType type="obj"/> <code>fluid</code> A fluid definition to match for drinking.</>}>
+    <JsonNode content={<>Either a <code>tag</code> or <code>fluid</code> but not both.</>}>
+      <JsonNode content={<><JsonDataType type="string"/> <code>tag</code> A fluid tag to match.</>}/>
+      <JsonNode content={<><JsonDataType type="string"/> <code>fluid</code> A fluid ID.</>}/>
+    </JsonNode>
+    <JsonNode content={<><JsonDataType type="obj"/> <code>nbt</code> An optional NBT structured as-is. If this is specified, the recipe would sensitively match for the NBT. If not, the recipe woould ignore the fluid's NBTs.</>}/>
+  </JsonNode>
+  <JsonNode content={<><JsonDataType type="int"/> <code>amount</code> The amount of fluid to be drunk. If not specified, the recipe would allow drinking the fluid with any number between 0 and the configured <code>drinkingMaxAmount</code>, which is 250 by default.</>}/>
+  <JsonNode content={<><JsonDataType type="array"/> <code>results</code> A list of <code>drink_result_type</code>s. See below for further info.</>}>
+      <JsonNode content={<><JsonDataType type="string"/> <code>type</code> The ID of the type.</>}/>
+      <JsonNode content={<>Other arbitrary properties each type may require.</>}/>
+  </JsonNode>
+</JsonStructure>
+
+`drink_result_type`s are in-game effects that would trigger when fluids are drunk.
+Currently, there are 6 `drink_result_types` available:
+- `recicropal:finish_item` would trigger effects of an `item` when that item is used.
+- `recicropal:finish_item_transfer_nbt` would trigger effects of an `item` when that item is used with the NBT from the fluid drunk transferred to the item.
+Its main use case is for handling potion fluids.
+- `recicropal:mixture` would trigger the effects of [potion mixtures](/recicropal/content/mixing#potion-mixing) when they drunk. It is not meant to be used for other fluids.
+- `recicropal:heal`, `recicropal:set_fire`, and `recicropal:zap` trigger what their names suggest and are all meant for debugging purposes only.
+They may be removed in upcoming updates.

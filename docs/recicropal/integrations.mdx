@@ -15,12 +15,40 @@ version: 1.0.0.a
     </div>
 </div>
 
-## General Integrations
+Not seeing a mod you like integrated with `recicropal`? Ask for enhancements at the [issues](https://github.com/MystDevMC/recicropal/issues) page!
+
+## `sereneseasons`
+
+[Bottle gourds](/recicropal/crops/bottle_gourd) and [climbing melons and pumpkins](/recicropal/crops/climbing_crops) crops have their own configured growing seasons.
+_<DataDriven >
+Check out `sereneseasons/tags` in the `data` folder that comes with `recicropal`
+</DataDriven>_
+Bottle gourds would only grow in the spring. Climbing melons in the summer. And climbing pumpkins in the autumn.
 
 ## `create`
 
-## `farmersdelight`
+If `create` exists, all `#forge:honey` fluids would be converted into `create`'s honey when inserted into a [gourd bottle](/recicropal/crops/bottle_gourd#gourd-bottles).
+_<DataDriven >
+This is a personal preference and can be opted-out by disabling the `ingress_honey.json` recipe in the `data/recipes/compat/create` folder that comes with `recicropal`
+</DataDriven>_
+This may cause complications if the packdev wants to preserve other kinds of honey.
 
-## `cofh_core`
+`create`'s potion fluids will be converted into `recicropal`'s potion fluid when inserted into a [gourd bottle](/recicropal/crops/bottle_gourd#gourd-bottles).
+This is done under the hood by renaming the tag `Bottle` inside the fluid into `Modifier` and changing the fluid types.
+_<DataDriven >
+This can be configured via the `ingress_potion.json` recipe in the `data/recipes/compat/create` folder that comes with `recicropal`
+</DataDriven>_
 
-## `thermal`
+## `farmersdelight` <DataDriven >This can be configured in the `data/recipes/compat/farmersdelight` folder that comes with `recicropal`</DataDriven>
+`farmersdelight`'s milk bottles can be used for interacting with [gourd bottles](/recicropal/crops/bottle_gourd#gourd-bottles).
+Similarly, glass bottles can be used to pour out milk from gourd bottles.
+If this mod exists, milk drinking would also follow the rules of milk bottle drinking which only clears one status effect.
+
+## `cofh_core` <DataDriven >This can be configured via the `ingress_potion.json` in the `data/recipes/compat/cofh_core` folder that comes with `recicropal`</DataDriven>
+To support the potion fluids from `thermal` series, `cofh_core`'s potion fluids will be converted into `recicropal`'s potion fluid when inserted into a [gourd bottle](/recicropal/crops/bottle_gourd#gourd-bottles).
+This is done under the hood by adding the tag `Modifier: "normal"` to the fluid NBT and changing the fluid types.
+
+## `thermal` <DataDriven >This can be configured in the `data/recipes/compat/thermal` folder that comes with `recicropal`</DataDriven>
+`thermal`'s syrup bottles can be used for interacting with [gourd bottles](/recicropal/crops/bottle_gourd#gourd-bottles).
+Similarly, glass bottles can be used to pour out syrup from gourd bottles.
+Syrup can be drunk, triggering the effects of drinking a syrup bottle when so.
