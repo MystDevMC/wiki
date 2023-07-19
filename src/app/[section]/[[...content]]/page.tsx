@@ -5,12 +5,13 @@ import MD from "@/components/docs/md-wrapper";
 
 // TODO Refactor this
 async function parseListJson(name: string) {
-  const data = await fs.readFile(`${process.cwd()}/data/lists/${name}.json` , "utf8");
+  const data = require(`data/lists/${name}.json`);
   const elements: JSX.Element[] = [];
   const addtional = {
     changelogLink: "",
   };
-  var json = JSON.parse(data);
+  // var json = JSON.parse(data);
+  const json = data;
   Object.keys(json).forEach((key) => {
     if (key === "Changelog") {
       elements.push(
