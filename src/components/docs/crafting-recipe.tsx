@@ -1,4 +1,4 @@
-import { getJson } from "@/lib/server-utils";
+import { getData } from "@/lib/server-utils";
 import ItemComponent from "./item";
 import { MoveRight, Shuffle } from "lucide-react";
 import { ReactNode } from "react";
@@ -32,7 +32,7 @@ export default async function CraftingRecipe({
   path: string;
   small?: boolean;
 }) {
-  const rawRecipe = (await getJson(`/data/recipes${path}`)) as RawRecipe;
+  const rawRecipe = (await getData(`recipes${path}`)) as RawRecipe;
   const key: keyof typeof RecipeType = rawRecipe.type.toUpperCase() as any;
   const recipe = {
     type: RecipeType[key],
@@ -44,12 +44,12 @@ export default async function CraftingRecipe({
 
   const items: JSX.Element[] = [];
 
-  recipe.pattern.forEach(async (row) => {
+  recipe.pattern.forEach(async (row, rowIdx) => {
     const rowItems: JSX.Element[] = [];
-    row.split("").forEach(async (c) => {
+    row.split("").forEach(async (c, idx) => {
       if (c === " ") {
         rowItems.push(
-          <Slot>
+          <Slot key={String(idx)}>
             <div className={cx(small ? "w-8 h-8" : "w-12 h-12")}></div>
           </Slot>
         );
@@ -57,12 +57,12 @@ export default async function CraftingRecipe({
       }
       const rl = recipe.keys[c] as string;
       rowItems.push(
-        <Slot>
+        <Slot key={String(idx)}>
           <ItemComponent rl={rl} small={small} />
         </Slot>
       );
     });
-    items.push(<div className="flex gap-2">{rowItems}</div>);
+    items.push(<div className="flex gap-2" key={String(rowIdx)}>{rowItems}</div>);
   });
 
   return (
@@ -73,17 +73,17 @@ export default async function CraftingRecipe({
       ) : (
         <Shuffle className={cx(small ? "w-4 h-4" : "w-8 h-8")} />
       )}
-      <Slot>
+      <Slot key="result">
         <ItemComponent rl={recipe.result} count={recipe.count} small={small} />
       </Slot>
     </div>
   );
 }
 
-export function Slot({ children }: { children: ReactNode }) {
+export function Slot({ ...props }) {
   return (
-    <div className="bg-gray-950/50 p-2 flex items-center justify-center">
-      {children}
+    <div className="bg-gray-950/50 p-2 flex items-center justify-center" key={props.key}>
+      {props.children}
     </div>
   );
 }

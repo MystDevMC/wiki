@@ -1,34 +1,33 @@
-import { promises as fs } from "fs";
 import MDX from "@/components/docs/mdx-wrapper";
 import { cx } from "@/lib/common-utils";
 import MD from "@/components/docs/md-wrapper";
+import { getData } from "@/lib/server-utils";
 
 // TODO Refactor this
 async function parseListJson(name: string) {
-  const data = require(`data/lists/${name}.json`);
+  const data = await getData(`lists/${name}.json`);
   const elements: JSX.Element[] = [];
   const addtional = {
     changelogLink: "",
   };
-  // var json = JSON.parse(data);
   const json = data;
   Object.keys(json).forEach((key) => {
     if (key === "Changelog") {
       elements.push(
-        <li>
+        <li key={key}>
           <a href={`/${name}/changelog`}>{key}</a>
         </li>
       );
       addtional.changelogLink = json[key];
     } else if (json[key] === "index") {
       elements.push(
-        <li>
+        <li key={key}>
           <a href={`/${name}`}>{key}</a>
         </li>
       );
     } else if (json[key] instanceof Array) {
       elements.push(
-        <li className="flex flex-col gap-4">
+        <li className="flex flex-col gap-4" key={key}>
           <div>{key}</div>
           <ul className="flex flex-col gap-4 pl-4">
             {parseListContent(name, json[key])}
@@ -38,7 +37,7 @@ async function parseListJson(name: string) {
     } else {
       var e = json[key];
       elements.push(
-        <li>
+        <li key={key}>
           <a href={`/${name}/${e["docs"]}`}>{key}</a>
         </li>
       );
@@ -51,7 +50,7 @@ function parseListContent(section: string, list: any[]) {
   const elements: JSX.Element[] = [];
   list.forEach((e) => {
     elements.push(
-      <li>
+      <li key={e["title"]}>
         <a href={`/${section}/${e["docs"]}`}>{e["title"]}</a>
       </li>
     );
@@ -64,6 +63,8 @@ export default async function SectionPage({
 }: {
   params: { section: string; content: string[] };
 }) {
+  if (params.section === 'favicon.ico') return <></>
+
   const result = await parseListJson(params.section);
   const docsDir =
     params.section + (params.content ? "/" + params.content.join("/") : "");

@@ -1,4 +1,4 @@
-import { getJson } from "@/lib/server-utils";
+import { getData } from "@/lib/server-utils";
 import Image from "next/image";
 import ItemTooltip from "./item-tooltip";
 import { cx } from "@/lib/common-utils";
@@ -20,13 +20,11 @@ export default async function ItemComponent({
 }) {
   let item: Item;
   if (rl.startsWith("#")) {
-    item = (await getJson(
-      `/data/items${rlToPath("minecraft:tag")}.json`
-    )) as Item;
+    item = (await getData(`items${rlToPath("minecraft:tag")}.json`)) as Item;
     item.id = rl;
     item.name = rl;
   } else {
-    item = (await getJson(`/data/items${rlToPath(rl)}.json`)) as Item;
+    item = (await getData(`items${rlToPath(rl)}.json`)) as Item;
   }
   return (
     <ItemTooltip

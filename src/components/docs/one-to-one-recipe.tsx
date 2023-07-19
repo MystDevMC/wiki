@@ -1,4 +1,4 @@
-import { getJson } from "@/lib/server-utils";
+import { getData } from "@/lib/server-utils";
 import ItemComponent from "./item";
 import { MoveRight } from "lucide-react";
 import { cx } from "@/lib/common-utils";
@@ -29,7 +29,7 @@ export default async function OneToOneRecipe({
   path: string;
   small?: boolean;
 }) {
-  const rawRecipe = (await getJson(`/data/recipes${path}`)) as RawRecipe;
+  const rawRecipe = (await getData(`recipes${path}`)) as RawRecipe;
   const key: keyof typeof RecipeType = rawRecipe.type.toUpperCase() as any;
   const recipe = {
     type: RecipeType[key],
@@ -40,11 +40,11 @@ export default async function OneToOneRecipe({
 
   return (
     <div className="flex gap-4 items-center">
-      <Slot>
+      <Slot key="input">
         <ItemComponent rl={recipe.input} count={recipe.count} small={small} />
       </Slot>
       <MoveRight className={cx(small ? "w-4 h-4" : "w-8 h-8")} />
-      <Slot>
+      <Slot key="result">
         <ItemComponent rl={recipe.result} count={recipe.count} small={small} />
       </Slot>
     </div>
